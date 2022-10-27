@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ventoss.mybatis.mapper.DeptMapper">
+    <resultMap id="deptEmpMap" type="Dept">
+        <id property="did" column="did"></id>
+        <result property="deptName" column="dept_name"></result>
+        <!--
+        ofType：设置collection标签所处理的集合属性中存储数据的类型
+        -->
+        <collection property="emps" ofType="Emp">
+            <id property="eid" column="eid"></id>
+            <result property="empName" column="emp_name"></result>
+            <result property="age" column="age"></result>
+            <result property="sex" column="sex"></result>
+            <result property="email" column="email"></result>
+            <association property="dept" javaType="Dept">
+                <id column="did" property="did"></id>
+                <result column="dept_name" property="deptName"></result>
+            </association>
+        </collection>
+
+    </resultMap>
+
+    <resultMap id="deptEmpStep" type="Dept">
+        <id property="did" column="did"></id>
+        <result property="deptName" column="dept_name"></result>
+        <collection property="emps" fetchType="eager"
+                    select="com.ventoss.mybatis.mapper.EmpMapper.getEmpListByDid"
+                    column="did">
+<!--            <id property="eid" column="eid"></id>-->
+<!--            <result property="empName" column="emp_name"></result>-->
+<!--            <result property="age" column="age"></result>-->
+<!--            <result property="sex" column="sex"></result>-->
+<!--            <result property="email" column="email"></result>-->
+<!--            <association property="dept" javaType="Dept">-->
+<!--                <id column="did" property="did"></id>-->
+<!--                <result column="dept_name" property="deptName"></result>-->
+<!--            </association>-->
+
+        </collection>
+
+    </resultMap>
+    <select id="getDeptByStep" resultMap="deptEmpStep">
+        select * from t_dept where did = #{did}
+    </select>
+
+
+
+
+    <select id="getEmpByStep" resultType="Dept">
+        select * from t_dept where did = #{did}
+    </select>
+    <select id="getDeptEmpByDid" resultMap="deptEmpMap">
+        select dept.*, emp.* from t_dept dept left join
+        t_emp emp on dept.did = emp.did where dept.did = #{did}
+    </select>
+</mapper>

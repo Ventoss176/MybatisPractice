@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- mapper 与 configration-->
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ventoss.mybatis.mapper.UserMapper">
+        <!--    若mapper接口中的方法参数为实体类对象时
+        此时可以使用${}和#{}，通过访问实体类对象中的属性名获取属性值，
+        注意${}需要手动加单引号
+        -->
+    <!--int insertUser();-->
+<!--    <insert id="insertUser">-->
+<!--        insert into t_user values(null, '张三', '123' ,23 , '男', '2312312@qdasd')-->
+<!--    </insert>-->
+
+    <resultMap id="userMap" type="User">
+        <id property="id" column="id"></id>
+        <result property="username" column="user_name"></result>
+        <result property="password" column="password"></result>
+        <result property="age" column="age"></result>
+        <result property="sex" column="sex"></result>
+        <result property="email" column="email"></result>
+    </resultMap>
+
+
+
+
+
+    <insert id="insertUser" useGeneratedKeys="true" keyProperty="id">
+        insert into t_user values(null, #{username}, #{password} ,#{age} , #{sex}, null)
+    </insert>
+
+    <update id="updateUser">
+        update t_user set username = '张三' where id = 2;
+    </update>
+
+    <delete id="deleteUser">
+        delete from t_user where id = #{id}
+    </delete>
+
+    <select id="getUserById" resultMap="userMap">
+        select * from t_user where id = #{id}
+    </select>
+
+<!--    <select id="getAllUsers" resultType="User">-->
+<!--        select * from t_user-->
+<!--    </select>-->
+    <select id="getAllUsers" resultMap="userMap">
+        select * from ${tablename}
+    </select>
+    <select id="getAllUsersToMap" resultMap="userMap">
+        select * from t_user
+    </select>
+    <select id="getUserToMap" resultMap="userMap">
+        select * from t_user where id = #{id}
+    </select>
+    <select id="getCount" resultType="_integer">
+        select count(id) from t_user
+    </select>
+
+    <select id="testMohu" resultMap="userMap">
+        <!--select * from t_user where username like '%${mohu}%'-->
+        <!--select * from t_user where username like concat('%',#{mohu},'%')-->
+        select * from t_user where user_name like "%"#{mohu}"%"
+    </select>
+
+    <delete id="deleteMore">
+    delete from t_user where id in (${ids})
+    </delete>
+
+
+
+</mapper>

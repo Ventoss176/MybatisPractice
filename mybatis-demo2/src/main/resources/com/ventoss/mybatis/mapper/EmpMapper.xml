@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ventoss.mybatis.mapper.EmpMapper">
+
+
+<!--    <resultMap id="empresultMap" type="Emp">-->
+<!--        <id property="eid" column="eid"></id>-->
+<!--        <result property="empName" column="emp_name"></result>-->
+<!--        <result property="age" column="age"></result>-->
+<!--        <result property="sex" column="sex"></result>-->
+<!--        <result property="email" column="email"></result>-->
+<!--        <result property="dept.did" column="did"></result>-->
+<!--        <result property="dept.deptName" column="dept_name"></result>-->
+
+<!--    </resultMap>-->
+    <resultMap id="empresultMap" type="Emp">
+        <id property="eid" column="eid"></id>
+        <result property="empName" column="emp_name"></result>
+        <result property="age" column="age"></result>
+        <result property="sex" column="sex"></result>
+        <result property="email" column="email"></result>
+        <association property="dept" javaType="Dept">
+            <id column="did" property="did"></id>
+            <result column="dept_name" property="deptName"></result>
+        </association>
+    </resultMap>
+    <resultMap id="empDeptStepMap" type="Emp">
+        <id property="eid" column="eid"></id>
+        <result property="empName" column="emp_name"></result>
+        <result property="age" column="age"></result>
+        <result property="sex" column="sex"></result>
+        <result property="email" column="email"></result>
+        <association property="dept" select="com.ventoss.mybatis.mapper.DeptMapper.getEmpByStep"
+                     column="did">
+        </association>
+    </resultMap>
+
+    <select id="getEmpListByDid" resultMap="empresultMap">
+        select * from t_emp where did = #{did}
+    </select>
+
+
+
+    <select id="getAllEmps" resultType="Emp">
+        select eid, emp_name, age, sex, email, did from t_emp
+    </select>
+
+    <select id="getEmpByStep" resultMap="empDeptStepMap">
+        select * from t_emp where eid = #{eid}
+    </select>
+<!--    <select id="getEmpAndDept" resultType="Dept">-->
+<!--        select * from t_dept where did = #{did}-->
+<!--    </select>-->
+
+
+
+
+</mapper>
